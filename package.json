@@ -4,6 +4,9 @@
   "scripts": {
     "watch": "tsc --watch"
   },
+  "exports": {
+    "types": "./src/index.ts"
+  },
   "type": "module",
   "homepage": "https://api.90s.dev/",
   "devDependencies": {
