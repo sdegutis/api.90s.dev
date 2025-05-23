@@ -19,7 +19,6 @@ function transformAll() {
     file.path = file.path.replace(/\.tsx?$/, '.js')
     file.text = transformSync(file.text, {
       plugins: [
-
         [require('@babel/plugin-transform-typescript'), { isTSX: true }],
         [require('@babel/plugin-transform-react-jsx'), { runtime: 'automatic' }],
         {
