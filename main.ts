@@ -8,7 +8,9 @@ const require = createRequire(import.meta.url)
 const tree = new FileTree('src', import.meta.url)
 
 transformAll()
-tree.watch().on('filesUpdated', transformAll)
+
+const isDev = process.argv[2] === 'dev'
+if (isDev) tree.watch().on('filesUpdated', transformAll)
 
 function transformAll() {
   const files = Pipeline.from(tree.files)
