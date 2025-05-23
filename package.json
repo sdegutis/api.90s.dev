@@ -4,7 +4,10 @@
   "homepage": "https://api.90s.dev/",
 
   "version": "1.0.0",
-  "scripts": { "watch": "tsc --watch" },
+  "scripts": {
+    "watch": "tsc --watch",
+    "postinstall": "node main.ts generate"
+  },
   "type": "module",
   "devDependencies": {
     "@babel/core": "^7.27.1",
