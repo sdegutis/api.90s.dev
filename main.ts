@@ -5,6 +5,7 @@ import { createRequire } from 'node:module'
 
 transform(new FileTree('src', import.meta.url), {
   watch: process.argv[2] === 'dev',
+  // jsxImport: 'https://api.90s.dev/_jsx.js'
 })
 
 function transform(tree: FileTree, opts?: { watch?: boolean, jsxImport?: string }) {
@@ -18,24 +19,20 @@ function transform(tree: FileTree, opts?: { watch?: boolean, jsxImport?: string 
     {
       visitor: {
         ImportDeclaration: {
-          enter: (path) => {
-            const dep = path.node.source?.value
-            if (!dep) return
-
-            if (dep === 'react/jsx-runtime') {
+          enter(path) {
+            if (path.node.source.value === 'react/jsx-runtime') {
               path.node.source.value = jsxImport
             }
-            else if (!dep.match(/^[./]/)) {
-              const split = dep.indexOf('/')
-              const lib = dep.slice(0, split)
-              const imported = dep.slice(split)
-
-              const pkgjson = JSON.parse(readFileSync('node_modules/' + lib + '/package.json', 'utf8'))
-              const baseurl = new URL(imported, pkgjson.homepage)
-              path.node.source.value = baseurl.href
-            }
+            modifyPath(path.node.source)
           },
-        }
+        },
+        ExportDeclaration: {
+          enter(path) {
+            if ('source' in path.node && path.node.source?.value) {
+              modifyPath(path.node.source)
+            }
+          }
+        },
       }
     }
   ]
@@ -54,4 +51,18 @@ function transform(tree: FileTree, opts?: { watch?: boolean, jsxImport?: string 
     rmSync('docs', { force: true, recursive: true })
     generateFiles(files.results())
   }
+}
+
+function modifyPath(source: babel.types.StringLiteral) {
+  const dep = source.value
+  if (dep.match(/^[./]/) || dep.startsWith('http')) return
+
+  const split = dep.indexOf('/')
+  const lib = dep.slice(0, split)
+  const imported = dep.slice(split)
+
+  const pkgjson = JSON.parse(readFileSync('node_modules/' + lib + '/package.json', 'utf8'))
+  const baseurl = new URL(imported, pkgjson.homepage)
+
+  source.value = baseurl.href
 }
