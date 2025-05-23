@@ -15,6 +15,6 @@
   },
   "dependencies": {
     "immaculata": "^2.0.1",
-    "quickexport": "^1.0.1"
+    "quickexport": "^2.0.0"
   }
 }

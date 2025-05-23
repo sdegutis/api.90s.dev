@@ -1,7 +1,18 @@
-import { FileTree } from "immaculata"
-import { transform } from 'quickexport'
+import { publishDir } from 'quickexport'
 
-transform(new FileTree('src', import.meta.url), {
-  watch: process.argv[2] === 'dev',
-  // jsxImport: 'https://api.90s.dev/_jsx.js'
+publishDir({
+
+  projectRoot: import.meta.dirname,
+
+  srcDir: 'src',
+
+  dev: process.argv[2] === 'dev' && {
+    port: 8181,
+    generateFiles: true,
+  },
+
+  importMap: {
+    'react/jsx-runtime': '/_jsx.js'
+  }
+
 })
