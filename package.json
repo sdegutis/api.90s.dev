@@ -1,14 +1,11 @@
 {
   "name": "api.90s.dev",
-  "version": "1.0.0",
-  "scripts": {
-    "watch": "tsc --watch"
-  },
-  "exports": {
-    "./*": "./src/*"
-  },
-  "type": "module",
+  "exports": { "./*": "./src/*" },
   "homepage": "https://api.90s.dev/",
+
+  "version": "1.0.0",
+  "scripts": { "watch": "tsc --watch" },
+  "type": "module",
   "devDependencies": {
     "@babel/core": "^7.27.1",
     "@babel/plugin-transform-react-jsx": "^7.27.1",
