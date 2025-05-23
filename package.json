@@ -5,8 +5,7 @@
 
   "version": "1.0.0",
   "scripts": {
-    "watch": "tsc --watch",
-    "postinstall": "node main.js generate"
+    "watch": "tsc --watch"
   },
   "type": "module",
   "devDependencies": {

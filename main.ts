@@ -1,4 +1,4 @@
-import { transformSync } from '@babel/core'
+import { transformSync, type PluginItem } from '@babel/core'
 import { FileTree, generateFiles, Pipeline } from "immaculata"
 import { readFileSync, rmSync } from "node:fs"
 import { createRequire } from 'node:module'
@@ -7,18 +7,12 @@ transform(new FileTree('src', import.meta.url), {
   watch: process.argv[2] === 'dev',
 })
 
-/**
- * @param {FileTree} tree
- * @param {{ watch?: boolean, jsxImport?: string }} [opts]
- */
-function transform(tree, opts) {
+function transform(tree: FileTree, opts?: { watch?: boolean, jsxImport?: string }) {
   const watch = opts?.watch
   const jsxImport = opts?.jsxImport ?? '/_jsx.js'
 
   const require = createRequire(import.meta.url)
-
-  /** @type {import('@babel/core').PluginItem[]} */
-  const plugins = [
+  const plugins: PluginItem[] = [
     [require('@babel/plugin-transform-typescript'), { isTSX: true }],
     [require('@babel/plugin-transform-react-jsx'), { runtime: 'automatic' }],
     {
@@ -54,7 +48,7 @@ function transform(tree, opts) {
 
     files.with(/\.tsx?$/).do(file => {
       file.path = file.path.replace(/\.tsx?$/, '.js')
-      file.text = transformSync(file.text, { plugins, })?.code
+      file.text = transformSync(file.text, { plugins, })?.code!
     })
 
     rmSync('docs', { force: true, recursive: true })
